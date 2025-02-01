@@ -18,7 +18,7 @@
 # Load the readr package
 
 # ANSWER
-
+library(readr)
 
 ### QUESTION 2 ----- 
 
@@ -47,6 +47,10 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # ANSWER
 
 
+?read_delim
+ds1 <- read_delim("data_a/6191_1.txt", delim = "\t", col_names = col_names, skip = 7)
+print(ds1)
+
 
 ### QUESTION 3 ----- 
 
@@ -55,6 +59,13 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # Then write the new data to a CSV file in the "data_cleaned" folder
 
 # ANSWER
+library(dplyr)
+ds1 <- ds1 %>%
+  mutate(trial_num = trial_num + 100)
+
+dir.create("data_cleaned")
+write.csv(ds1, "data_cleaned/6191_1_cleaned.csv")
+
 
 
 ### QUESTION 4 ----- 
@@ -64,12 +75,14 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 
 # ANSWER
 
+full_file_names <- list.files('data_A', full.names = TRUE)
 
 ### QUESTION 5 ----- 
 
 # Read all of the files in data_A into a single tibble called ds
 
 # ANSWER
+ds_all <- read_delim(full_file_names, delim = "\t", col_names = col_names, skip = 7)
 
 
 ### QUESTION 6 -----
@@ -84,6 +97,13 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 
 # ANSWER
 
+?read_tsv
+coltypes <- "iccl"
+ds_all <- read_delim(full_file_names, delim = "\t", col_names = col_names, skip = 7, col_types = coltypes)
+ds_all <- ds_all %>%
+  mutate(trial_num = trial_num + 100)
+print(ds_all)
+
 
 ### QUESTION 7 -----
 
@@ -93,7 +113,11 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # Re-import the data so that filename becomes a column
 
 # ANSWER
-
+?read_tsv
+ds_all <- read_delim(full_file_names, delim = "\t", col_names = col_names, skip = 7, col_types = coltypes, id = "filename")
+ds_all <- ds_all %>%
+  mutate(trial_num = trial_num + 100)
+print(ds_all)
 
 ### QUESTION 8 -----
 
@@ -102,4 +126,11 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # There are two sheets of data -- import each one into a new tibble
 
 # ANSWER
+
+library(readxl)
+?readxl
+datab_participant <- read_xlsx("data_B/participant_info.xlsx", sheet = 1)
+
+fname <- c("Participant", "Date")
+datab_testdate <- read_xlsx("data_B/participant_info.xlsx", sheet = 2, col_names = fname)
 
